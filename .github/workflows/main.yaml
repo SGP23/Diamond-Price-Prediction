@@ -1,36 +1,38 @@
-name: Build and push image to ECR
+name: CI
+
 on:
   push:
-    branches:
-      - main
-
-
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
-  build-and-push-ecr-image:
-    name: Build Image
+  build:
+    name: Build & Verify
     runs-on: ubuntu-latest
+
     steps:
-    - name: Check out code
-      uses: actions/checkout@v2
-    - name: Install Utilities
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y jq unzip
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-1
-    - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
-    - name: Build, tag, and push image to Amazon ECR
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: diamondpriceprediction
-        IMAGE_TAG: latest
-      run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Verify imports
+        run: python -c "from src.DiamondPricePrediction.pipelines.Training_pipeline import TrainingPipeline; print('Imports OK')"
+
+      - name: Run training pipeline
+        run: python main.py --train
+
+      - name: Verify artifacts
+        run: |
+          test -f Artifacts/model.pkl
+          test -f Artifacts/preprocessor.pkl
+          test -f Artifacts/final_model_metrics.json
+          echo "All artifacts present"
