@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}">
+    <title>Diamond Price Prediction</title>
+</head>
+<body>
+
+    <!-- ===== Ambient background orbs ===== -->
+    <div class="bg-orb bg-orb--1"></div>
+    <div class="bg-orb bg-orb--2"></div>
+    <div class="bg-orb bg-orb--3"></div>
+
+    <!-- ===== Loading overlay ===== -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-card">
+            <svg class="loading-diamond" viewBox="0 0 64 64" width="56" height="56">
+                <polygon points="32,4 58,24 32,60 6,24" fill="none" stroke="currentColor" stroke-width="2"/>
+                <polyline points="6,24 32,24 58,24" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                <line x1="32" y1="4" x2="20" y2="24" stroke="currentColor" stroke-width="1.2"/>
+                <line x1="32" y1="4" x2="44" y2="24" stroke="currentColor" stroke-width="1.2"/>
+                <line x1="20" y1="24" x2="32" y2="60" stroke="currentColor" stroke-width="1.2"/>
+                <line x1="44" y1="24" x2="32" y2="60" stroke="currentColor" stroke-width="1.2"/>
+            </svg>
+            <p class="loading-text">Analyzing diamond characteristics&hellip;</p>
+            <div class="loading-bar"><div class="loading-bar-fill"></div></div>
+        </div>
+    </div>
+
+    <!-- ===== Page wrapper ===== -->
+    <div class="page">
+
+        <!-- ===== Header ===== -->
+        <header class="site-header">
+            <div class="site-header__inner">
+                <div class="logo">
+                    <svg class="logo__icon" viewBox="0 0 64 64" width="32" height="32">
+                        <polygon points="32,4 58,24 32,60 6,24" fill="none" stroke="currentColor" stroke-width="2.5"/>
+                        <polyline points="6,24 32,24 58,24" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                        <line x1="32" y1="4" x2="20" y2="24" stroke="currentColor" stroke-width="1.2"/>
+                        <line x1="32" y1="4" x2="44" y2="24" stroke="currentColor" stroke-width="1.2"/>
+                    </svg>
+                    <span class="logo__text">DiamondML</span>
+                </div>
+                <nav class="site-nav">
+                    <span class="badge badge--green">
+                        <svg width="10" height="10"><circle cx="5" cy="5" r="4" fill="currentColor"/></svg>
+                        Model Active
+                    </span>
+                </nav>
+            </div>
+        </header>
+
+        <!-- ===== Hero ===== -->
+        <section class="hero">
+            <h1 class="hero__title">Diamond Price Prediction</h1>
+            <p class="hero__subtitle">Powered by a machine learning model trained on 193,000+ diamonds. Enter the characteristics below to get an instant price estimate.</p>
+            <div class="hero__stats">
+                <div class="stat-chip">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
+                    R² = 0.976
+                </div>
+                <div class="stat-chip">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                    7 Models Compared
+                </div>
+                <div class="stat-chip">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                    193k Samples
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== Main card ===== -->
+        <main class="main-card">
+            <form action="{{url_for('predict_datapoint')}}" method="POST" id="predictionForm" novalidate>
+
+                <!-- Physical Properties -->
+                <fieldset class="form-section">
+                    <legend class="section-legend">
+                        <svg class="section-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18"/><path d="M8 7l4-4 4 4"/><path d="M4 14h16"/></svg>
+                        Physical Properties
+                    </legend>
+                    <div class="form-grid form-grid--3">
+                        <div class="form-group">
+                            <label for="carat">Carat</label>
+                            <div class="input-wrap">
+                                <input type="number" step="0.01" min="0.1" max="10" id="carat" name="carat" placeholder="0.75" required>
+                                <span class="input-unit">ct</span>
+                            </div>
+                            <span class="hint">Weight (0.2–5.0 typical)</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="depth">Depth</label>
+                            <div class="input-wrap">
+                                <input type="number" step="0.1" min="40" max="80" id="depth" name="depth" placeholder="61.5" required>
+                                <span class="input-unit">%</span>
+                            </div>
+                            <span class="hint">Total depth percentage</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="table">Table</label>
+                            <div class="input-wrap">
+                                <input type="number" step="0.1" min="40" max="80" id="table" name="table" placeholder="57.0" required>
+                                <span class="input-unit">%</span>
+                            </div>
+                            <span class="hint">Width of top facet</span>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Dimensions -->
+                <fieldset class="form-section">
+                    <legend class="section-legend">
+                        <svg class="section-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 3v18"/></svg>
+                        Dimensions
+                    </legend>
+                    <div class="form-grid form-grid--3">
+                        <div class="form-group">
+                            <label for="x">Length (x)</label>
+                            <div class="input-wrap">
+                                <input type="number" step="0.01" min="0" max="15" id="x" name="x" placeholder="5.70" required>
+                                <span class="input-unit">mm</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="y">Width (y)</label>
+                            <div class="input-wrap">
+                                <input type="number" step="0.01" min="0" max="15" id="y" name="y" placeholder="5.73" required>
+                                <span class="input-unit">mm</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="z">Height (z)</label>
+                            <div class="input-wrap">
+                                <input type="number" step="0.01" min="0" max="15" id="z" name="z" placeholder="3.50" required>
+                                <span class="input-unit">mm</span>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Quality Grades -->
+                <fieldset class="form-section">
+                    <legend class="section-legend">
+                        <svg class="section-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        Quality Grades
+                    </legend>
+                    <div class="form-grid form-grid--3">
+                        <div class="form-group">
+                            <label for="cut">Cut</label>
+                            <div class="select-wrap">
+                                <select id="cut" name="cut" required>
+                                    <option value="" disabled selected>Choose&hellip;</option>
+                                    <option value="Fair">Fair</option>
+                                    <option value="Good">Good</option>
+                                    <option value="Very Good">Very Good</option>
+                                    <option value="Premium">Premium</option>
+                                    <option value="Ideal">Ideal</option>
+                                </select>
+                                <svg class="select-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="color">Color</label>
+                            <div class="select-wrap">
+                                <select id="color" name="color" required>
+                                    <option value="" disabled selected>Choose&hellip;</option>
+                                    <option value="D">D — Colorless</option>
+                                    <option value="E">E — Colorless</option>
+                                    <option value="F">F — Colorless</option>
+                                    <option value="G">G — Near Colorless</option>
+                                    <option value="H">H — Near Colorless</option>
+                                    <option value="I">I — Near Colorless</option>
+                                    <option value="J">J — Near Colorless</option>
+                                </select>
+                                <svg class="select-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="clarity">Clarity</label>
+                            <div class="select-wrap">
+                                <select id="clarity" name="clarity" required>
+                                    <option value="" disabled selected>Choose&hellip;</option>
+                                    <option value="I1">I1 — Included</option>
+                                    <option value="SI2">SI2 — Slightly Incl.</option>
+                                    <option value="SI1">SI1 — Slightly Incl.</option>
+                                    <option value="VS2">VS2 — Very Slightly</option>
+                                    <option value="VS1">VS1 — Very Slightly</option>
+                                    <option value="VVS2">VVS2 — Very Very Sl.</option>
+                                    <option value="VVS1">VVS1 — Very Very Sl.</option>
+                                    <option value="IF">IF — Internally Flawless</option>
+                                </select>
+                                <svg class="select-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <svg class="btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    <span class="btn-text">Predict Price</span>
+                    <span class="spinner" id="spinner"></span>
+                </button>
+            </form>
+        </main>
+
+        <!-- ===== Footer ===== -->
+        <footer class="site-footer">
+            <p>Built with <strong>scikit-learn</strong> &middot; <strong>Flask</strong> &middot; <strong>Python</strong></p>
+            <p class="site-footer__sub">Diamond Price Prediction &mdash; ML Portfolio Project</p>
+        </footer>
+    </div>
+
+    <script>
+    (function() {
+        var form = document.getElementById('predictionForm');
+        var overlay = document.getElementById('loadingOverlay');
+        var btn = document.getElementById('submitBtn');
+
+        /* Save inputs to sessionStorage before submit so result page can display them */
+        form.addEventListener('submit', function(e) {
+            /* Basic HTML5 validation */
+            if (!form.checkValidity()) {
+                e.preventDefault();
+                form.reportValidity();
+                return;
+            }
+
+            /* Store form data */
+            var fields = ['carat','depth','table','x','y','z','cut','color','clarity'];
+            var data = {};
+            fields.forEach(function(f) {
+                var el = document.getElementById(f);
+                data[f] = el.value;
+            });
+            try { sessionStorage.setItem('diamondInput', JSON.stringify(data)); } catch(_) {}
+
+            /* Show loading state */
+            btn.classList.add('loading');
+            btn.querySelector('.btn-text').textContent = 'Predicting\u2026';
+            overlay.classList.add('active');
+        });
+
+        /* Mark invalid inputs visually on blur */
+        form.querySelectorAll('input, select').forEach(function(el) {
+            el.addEventListener('blur', function() {
+                if (!el.value) el.classList.add('touched');
+                else el.classList.remove('touched');
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

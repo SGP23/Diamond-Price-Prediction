@@ -1,0 +1,13 @@
+.git
+.github
+__pycache__
+*.egg-info
+*.pyc
+logs/
+reports/
+Artifacts/
+notebooks/
+docs/
+*.md
+!requirements.txt
+LICENSE

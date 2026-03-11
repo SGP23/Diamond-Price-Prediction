@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}">
+    <title>Prediction Result — Diamond Price</title>
+</head>
+<body class="result-page">
+
+    <!-- ===== Ambient background orbs ===== -->
+    <div class="bg-orb bg-orb--1"></div>
+    <div class="bg-orb bg-orb--2"></div>
+    <div class="bg-orb bg-orb--3"></div>
+
+    <div class="page">
+
+        <!-- ===== Header ===== -->
+        <header class="site-header">
+            <div class="site-header__inner">
+                <a href="{{url_for('predict_datapoint')}}" class="logo">
+                    <svg class="logo__icon" viewBox="0 0 64 64" width="32" height="32">
+                        <polygon points="32,4 58,24 32,60 6,24" fill="none" stroke="currentColor" stroke-width="2.5"/>
+                        <polyline points="6,24 32,24 58,24" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                        <line x1="32" y1="4" x2="20" y2="24" stroke="currentColor" stroke-width="1.2"/>
+                        <line x1="32" y1="4" x2="44" y2="24" stroke="currentColor" stroke-width="1.2"/>
+                    </svg>
+                    <span class="logo__text">DiamondML</span>
+                </a>
+                <nav class="site-nav">
+                    <span class="badge badge--blue">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                        Prediction Complete
+                    </span>
+                </nav>
+            </div>
+        </header>
+
+        <!-- ===== Result hero ===== -->
+        <section class="result-hero">
+            <div class="result-hero__diamond">
+                <svg viewBox="0 0 64 64" width="72" height="72">
+                    <polygon points="32,4 58,24 32,60 6,24" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                    <polyline points="6,24 32,24 58,24" fill="none" stroke="currentColor" stroke-width="1"/>
+                    <line x1="32" y1="4" x2="20" y2="24" stroke="currentColor" stroke-width="0.8"/>
+                    <line x1="32" y1="4" x2="44" y2="24" stroke="currentColor" stroke-width="0.8"/>
+                    <line x1="20" y1="24" x2="32" y2="60" stroke="currentColor" stroke-width="0.8"/>
+                    <line x1="44" y1="24" x2="32" y2="60" stroke="currentColor" stroke-width="0.8"/>
+                </svg>
+            </div>
+            <p class="result-hero__label">Estimated Market Price</p>
+            <h1 class="result-hero__price" id="priceValue">&rupee;{{final_result}}</h1>
+            <p class="result-hero__note">&#8776; ${{price_usd}} USD &middot; Rate: 1 USD = 92 INR</p>
+            <p class="result-hero__note">Predicted by Random Forest Regressor &middot; R&sup2; = 0.976</p>
+        </section>
+
+        <!-- ===== Details grid ===== -->
+        <div class="result-details">
+
+            <!-- Input summary card -->
+            <div class="detail-card" id="inputSummaryCard">
+                <h2 class="detail-card__title">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    Input Summary
+                </h2>
+                <table class="summary-table" id="summaryTable">
+                    <tbody>
+                        <tr><td>Carat</td><td id="sum-carat">—</td></tr>
+                        <tr><td>Cut</td><td id="sum-cut">—</td></tr>
+                        <tr><td>Color</td><td id="sum-color">—</td></tr>
+                        <tr><td>Clarity</td><td id="sum-clarity">—</td></tr>
+                        <tr><td>Depth</td><td id="sum-depth">—</td></tr>
+                        <tr><td>Table</td><td id="sum-table">—</td></tr>
+                        <tr><td>Dimensions</td><td id="sum-dims">—</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Model info card -->
+            <div class="detail-card">
+                <h2 class="detail-card__title">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                    Model Information
+                </h2>
+                <ul class="info-list">
+                    <li><span class="info-label">Algorithm</span><span class="info-value">Random Forest</span></li>
+                    <li><span class="info-label">Ensemble</span><span class="info-value">100 trees</span></li>
+                    <li><span class="info-label">Test R&sup2;</span><span class="info-value accent-green">0.976</span></li>
+                    <li><span class="info-label">Test MAE</span><span class="info-value">&rupee;28,424</span></li>
+                    <li><span class="info-label">Dataset</span><span class="info-value">193,573 samples</span></li>
+                    <li><span class="info-label">Cross-Val</span><span class="info-value">5-fold</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ===== Actions ===== -->
+        <div class="result-actions">
+            <a href="{{url_for('predict_datapoint')}}" class="action-btn action-btn--primary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                Predict Another
+            </a>
+        </div>
+
+        <!-- ===== Footer ===== -->
+        <footer class="site-footer">
+            <p>Built with <strong>scikit-learn</strong> &middot; <strong>Flask</strong> &middot; <strong>Python</strong></p>
+            <p class="site-footer__sub">Diamond Price Prediction &mdash; ML Portfolio Project</p>
+        </footer>
+    </div>
+
+    <script>
+    (function() {
+        /* Populate input summary from sessionStorage */
+        try {
+            var raw = sessionStorage.getItem('diamondInput');
+            if (raw) {
+                var d = JSON.parse(raw);
+                var set = function(id, val) { var el = document.getElementById(id); if (el && val) el.textContent = val; };
+                set('sum-carat', d.carat + ' ct');
+                set('sum-cut', d.cut);
+                set('sum-color', d.color);
+                set('sum-clarity', d.clarity);
+                set('sum-depth', d.depth + '%');
+                set('sum-table', d.table + '%');
+                set('sum-dims', d.x + ' × ' + d.y + ' × ' + d.z + ' mm');
+                sessionStorage.removeItem('diamondInput');
+            }
+        } catch(_) {}
+
+        /* Animate the price counter */
+        var priceEl = document.getElementById('priceValue');
+        if (priceEl) {
+            var target = parseFloat(priceEl.textContent.replace(/[^0-9.-]/g, ''));
+            if (!isNaN(target) && target > 0) {
+                var duration = 1200;
+                var start = null;
+                var from = 0;
+                priceEl.textContent = '\u20B90';
+                function step(ts) {
+                    if (!start) start = ts;
+                    var progress = Math.min((ts - start) / duration, 1);
+                    var ease = 1 - Math.pow(1 - progress, 3);
+                    var current = from + (target - from) * ease;
+                    priceEl.textContent = '\u20B9' + current.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                    if (progress < 1) requestAnimationFrame(step);
+                }
+                requestAnimationFrame(step);
+            }
+        }
+    })();
+    </script>
+</body>
+</html>
