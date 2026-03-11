@@ -34,7 +34,8 @@ def generate_feature_importance(model, feature_names):
 
     # Plot
     fig, ax = plt.subplots(figsize=(10, 6))
-    colors = plt.cm.viridis(np.linspace(0.3, 0.9, len(sorted_names)))
+    cmap = plt.colormaps['viridis']
+    colors = cmap(np.linspace(0.3, 0.9, len(sorted_names)))
     bars = ax.barh(range(len(sorted_names)), sorted_importances, color=colors)
     ax.set_yticks(range(len(sorted_names)))
     ax.set_yticklabels(sorted_names, fontsize=11)

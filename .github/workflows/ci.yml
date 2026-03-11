@@ -28,7 +28,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Verify imports
-        run: python -c "import main; print('Imports OK')"
+        run: python -c "from src.DiamondPricePrediction.pipelines.Training_pipeline import run_training_pipeline; print('Imports OK')"
 
       - name: Run training pipeline
         run: |

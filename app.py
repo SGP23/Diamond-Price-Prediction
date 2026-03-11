@@ -16,16 +16,17 @@ def predict_datapoint():
 
     else:
         logger.info("Received prediction request")
+        form = dict(request.form)
         data = CustomData(
-            carat=float(request.form.get('carat')),
-            depth=float(request.form.get('depth')),
-            table=float(request.form.get('table')),
-            x=float(request.form.get('x')),
-            y=float(request.form.get('y')),
-            z=float(request.form.get('z')),
-            cut=request.form.get('cut'),
-            color=request.form.get('color'),
-            clarity=request.form.get('clarity')
+            carat=float(form['carat']),
+            depth=float(form['depth']),
+            table=float(form['table']),
+            x=float(form['x']),
+            y=float(form['y']),
+            z=float(form['z']),
+            cut=form['cut'],
+            color=form['color'],
+            clarity=form['clarity']
         )
         final_data = data.get_data_as_dataframe()
         logger.info(f"Input features: carat={data.carat}, cut={data.cut}, color={data.color}, clarity={data.clarity}")

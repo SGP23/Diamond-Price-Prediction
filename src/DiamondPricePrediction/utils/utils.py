@@ -3,7 +3,6 @@ import sys
 import json
 import pickle
 import numpy as np
-import pandas as pd
 from src.DiamondPricePrediction.logger import logging
 from src.DiamondPricePrediction.exception import customexception
 

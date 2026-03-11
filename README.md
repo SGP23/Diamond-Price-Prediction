@@ -157,7 +157,7 @@ gemstone.csv ──▶ Ingestion ──▶ Transformation ──▶ Training ─
 ### Installation
 
 ```bash
-git clone https://github.com/KalyanMurapaka45/Diamond-Price-Prediction.git
+git clone https://github.com/SGP23/Diamond-Price-Prediction.git
 cd Diamond-Price-Prediction
 
 python -m venv venv
