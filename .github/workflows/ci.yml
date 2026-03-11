@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    name: Build & Verify
+    runs-on: ubuntu-latest
+
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Verify imports
+        run: python -c "import main; print('Imports OK')"
+
+      - name: Run training pipeline
+        run: |
+          python main.py --train
+          status=$?
+          if [ $status -ne 0 ]; then
+            echo "Training pipeline failed with exit code $status"
+            exit $status
+          fi
+          echo "Training pipeline completed successfully"
+
+      - name: Verify artifacts
+        run: |
+          test -f Artifacts/model.pkl
+          test -f Artifacts/preprocessor.pkl
+          test -f Artifacts/final_model_metrics.json
+          echo "All artifacts present"
